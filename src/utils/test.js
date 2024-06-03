@@ -49,7 +49,7 @@ export const splitproblem = (arr, problemSplitType) => {
             problemInitArr.push({
                 startLine: index, // 上一个关键字出现的行数标识
                 body: str, // 题干
-                initChoices: [],
+                initChoices: '',
                 answer: '', //答案
                 explains: '', // 解析
                 analysis: '', // 分析
@@ -72,7 +72,7 @@ export const splitproblem = (arr, problemSplitType) => {
         } else if (problemChoiceType.exec(str) !== null) {
             // 选项
             if(problemInitArr[problemNumber - 1].lastType === 'body'){
-                problemInitArr[problemNumber - 1].initChoices.push(str)
+                problemInitArr[problemNumber - 1].initChoices += str
             }
         }
         // else if(bodyImg.test(str)){
@@ -109,7 +109,7 @@ export const splitproblem = (arr, problemSplitType) => {
 
                 // 再筛选一下选项,有些详解会包含选项，需要单独处理
                 if (problemChoiceType.test(str) && lastType === 'body') {
-                    problemInitArr[problemNumber - 1].initChoices.push(str)
+                    problemInitArr[problemNumber - 1].initChoices += str
                     return
                 }
                 switch (lastType) {
@@ -131,7 +131,49 @@ export const splitproblem = (arr, problemSplitType) => {
 
         }
     })
+    const newProblem = problemInitArr.map((el) => {
+        if(el.initChoices.length > 0){
+          const answers = extractLetters(el.answer)?.map((letter) => findAlphabetPosition(letter))
+          let choices = el.initChoices.split(problemChoiceType)?.filter(p => !!p )
+          choices = choices.map((c,index) => {
+            const correct = answers.findIndex(n => (n-1) === index) !== -1
+            return {
+                body:c,
+                num: String.fromCharCode(65 + index),
+                correct
+            }
+          })
+          return {
+            ...el,
+            choices: choices
+          }
+        } else {
+          return el
+        }
+      })
 
-    return problemInitArr
+      console.log('newProblem', newProblem);
+    return newProblem
 }
 
+
+function findAlphabetPosition(letter) {
+    // 确保输入是单个字母并且是英文字母
+    if (letter.length !== 1 || !(/[A-Za-z]/.test(letter))) {
+        throw new Error("Input must be a single English letter.");
+    }
+    
+    // 将字母转换为小写进行统一处理
+    letter = letter.toLowerCase();
+    
+    // 计算并返回字母位置
+    return letter.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
+}
+
+function extractLetters(str) {
+    // 使用正则表达式匹配所有的字母字符
+    const letters = str.match(/[A-Za-z]/g);
+    
+    // 如果没有找到匹配项，返回空数组，否则返回匹配到的字母数组
+    return letters ? letters : [];
+  }

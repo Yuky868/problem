@@ -10,16 +10,16 @@ const num7 = /^\d+\)/g
 
 
 // A.
-const choice1 = /^[A-Z]\./g
+const choice1 = /[A-Z]\./g
 
 // A)
-const choice2 = /^[A-Z]\)/g
+const choice2 = /[A-Z]\)/g
 
 //a.
-const choice3 = /^[a-z]\./g
+const choice3 = /[a-z]\./g
 
 //(A)
-const choice4 = /^([A-Z]\))/g
+const choice4 = /([A-Z]\))/g
 
 const answer1 = /^\[答案\]/g
 const answer2 = /^【答案】/g

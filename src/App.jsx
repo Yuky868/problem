@@ -1,13 +1,25 @@
 // eslint-disable-next-line no-unused-vars
 import { useState, useEffect, useRef } from "react";
 import * as mammoth from "mammoth";
-import { Space, Row, Col, Button, Card, Radio } from "antd";
+import { Space, Row, Col, Button, Card } from "antd";
 import MyEditor from "./components/Editor";
 import {getUuid, dataURLtoFile  } from './utils/index'
 import "./App.css";
 import Uploader from './components/Upload.jsx'
 import { getLines, splitproblem } from './utils/test.js'
- import Modal from './components/Modal.jsx'
+import Modal from './components/Modal.jsx'
+import styled from 'styled-components';
+
+
+const StyledDiv = styled.div`
+p {
+  margin: 0;
+  text-align: start;
+}
+table {
+  border-collapse: collapse;
+}
+`;
 
 function App() {
   const [file, setFile] = useState(null); // 文件信息
@@ -63,7 +75,7 @@ function App() {
   // 拆题，拆题的数据源必须是编辑器中的内容
   const formatWord = (problemSplitType) => {
     const initProblemArr = splitproblem(lineArr, problemSplitType)
-    console.log('initProblemArr',initProblemArr);
+    // console.log('initProblemArr',initProblemArr);
     setProblems(initProblemArr)
   }
 
@@ -146,25 +158,30 @@ function App() {
           </div>
         </Col>
         <Col span={14}>
-          <div style={{height: '80vh', overflow:'scroll'}}>
-          {problems.map((pro, index) => {
-           return <Card key={index} style={{ width: 500 }} >
-            <p dangerouslySetInnerHTML={{ __html: pro.body }}></p>
-            <p dangerouslySetInnerHTML={{ __html: pro.initChoices }}></p>
-            <p dangerouslySetInnerHTML={{ __html: pro.answer }}></p>
-            <p dangerouslySetInnerHTML={{ __html: pro.analysis }}></p>
-            <p dangerouslySetInnerHTML={{ __html: pro.explains}}></p>
-            小问:
-            {pro.subproblems && pro.subproblems?.map((el,i) => {
-              return <>
-              <p key={i} dangerouslySetInnerHTML={{ __html: el?.body}}></p>
-              <p dangerouslySetInnerHTML={{ __html: el?.explains }}></p>
-              </>
+          <StyledDiv style={{height: '80vh', overflow:'scroll'}}>
+            {problems.map((pro, index) => {
+            return <Card key={index} style={{ width: 500 }} >
+              <p dangerouslySetInnerHTML={{ __html: pro.body }} style={{fontWeight: 600}}></p>
+              {pro?.choices && pro.choices?.map((el,i) => {
+                return <p key={el.num} style={el.correct ? {color: 'red'} : {}}>
+                  <span>{el.num}</span><span key={i} dangerouslySetInnerHTML={{ __html: el.body }}></span>
+                </p>
+              })}
+              {/* <p dangerouslySetInnerHTML={{ __html: pro.initChoices }}></p> */}
+          
+              <p style={{fontWeight: 600}}>小问:</p>
+              {pro.subproblems && pro.subproblems?.map((el,i) => {
+                return <>
+                <p key={i} dangerouslySetInnerHTML={{ __html: el?.body}}></p>
+                <p dangerouslySetInnerHTML={{ __html: el?.explains }}></p>
+                </>
+              })}
+              <p dangerouslySetInnerHTML={{ __html: pro.answer }}></p>
+              <p dangerouslySetInnerHTML={{ __html: pro.analysis }}></p>
+              <p dangerouslySetInnerHTML={{ __html: pro.explains}}></p>
+            </Card>
             })}
-            <p style={{color: 'red'}}>其他：{ pro.content }</p>
-           </Card>
-          })}
-         </div>
+         </StyledDiv>
         </Col>
       </Row>
       <Uploader 
