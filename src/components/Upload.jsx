@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { Button, message } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+// import { PlusOutlined } from '@ant-design/icons'
 import '@guanghe-pub/yc-pc-upload-react/dist/yc-pc-upload.min.css';
 import YcPcUpload from '@guanghe-pub/yc-pc-upload-react/dist/yc-pc-upload.min.js';
 import { getToken } from '../server/index'
@@ -51,7 +51,7 @@ const Uploader = forwardRef(
           uploadSlots={{
             trigger: () =>
               children || (
-                <Button icon={<PlusOutlined />} type='text'>
+                <Button type='text'>
                   请选择
                 </Button>
               )

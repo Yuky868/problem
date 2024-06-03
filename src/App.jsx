@@ -148,8 +148,8 @@ function App() {
         <Col span={14}>
           <div style={{height: '80vh', overflow:'scroll'}}>
           {problems.map((pro, index) => {
-           return <div key={index} style={{border: '1px solid black', padding:'10px'}} >
-            题干body:<p dangerouslySetInnerHTML={{ __html: pro.body }}></p>
+           return <Card key={index} style={{ width: 500 }} >
+            <p dangerouslySetInnerHTML={{ __html: pro.body }}></p>
             <p dangerouslySetInnerHTML={{ __html: pro.initChoices }}></p>
             <p dangerouslySetInnerHTML={{ __html: pro.answer }}></p>
             <p dangerouslySetInnerHTML={{ __html: pro.analysis }}></p>
@@ -162,7 +162,7 @@ function App() {
               </>
             })}
             <p style={{color: 'red'}}>其他：{ pro.content }</p>
-           </div>
+           </Card>
           })}
          </div>
         </Col>
