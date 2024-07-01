@@ -62,7 +62,7 @@ function App() {
         }; // 自定义样式映射
         const result = await mammoth.convertToHtml({ arrayBuffer, options });
         setContent(result.value);
-        // console.log(result.value);
+        console.log(result.value);
         await uploadImages(result.value)
       };
       fileReader.readAsArrayBuffer(file);
@@ -84,6 +84,7 @@ function App() {
     const imgRegex = /src="data:image\/[a-zA-Z]*;base64,([^"]*)"/g;
     let match;
 
+    console.log(imgRegex.exec(htmlContent));
     if((match = imgRegex.exec(htmlContent)) === null){
       setEditorText(htmlContent)
       if(window.tinymce){
@@ -166,10 +167,8 @@ function App() {
                 return <p key={el.num} style={el.correct ? {color: 'red'} : {}}>
                   <span>{el.num}</span><span key={i} dangerouslySetInnerHTML={{ __html: el.body }}></span>
                 </p>
-              })}
-              {/* <p dangerouslySetInnerHTML={{ __html: pro.initChoices }}></p> */}
-          
-              <p style={{fontWeight: 600}}>小问:</p>
+              })}          
+              {<p style={{fontWeight: 600,color:'red'}}>小问:</p>}
               {pro.subproblems && pro.subproblems?.map((el,i) => {
                 return <>
                 <p key={i} dangerouslySetInnerHTML={{ __html: el?.body}}></p>

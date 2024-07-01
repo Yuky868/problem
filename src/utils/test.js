@@ -92,12 +92,27 @@ export const splitproblem = (arr, problemSplitType) => {
         //     }
         // } 
         else if(problemSubNumType.test(str)){
+            
             if(problemInitArr[problemNumber - 1].lastType === 'body'){
                 problemInitArr[problemNumber - 1].subproblems.push({
-                    body: str
+                    body: str,
+                    explains:''
                 })
             }
         } else if(problemSubExplainType.test(str)){
+            // problemSubExplainType.lastIndex = 0
+            // let match1 = problemSubExplainType.exec(str);
+            // let subIndex  = 0
+            // const subLength = problemInitArr[problemNumber - 1].subproblems.length
+            // if(match1){
+            //     subIndex = match1[1] - 1
+            // }
+            // console.log('sss',str, subIndex,);
+            // if(subLength > 0) {
+            //     problemInitArr[problemNumber - 1].subproblems[subIndex].explains = str
+            // } else {
+            //     return
+            // }
             const subLength = problemInitArr[problemNumber - 1].subproblems.length
             if(subLength > 0) {
                 problemInitArr[problemNumber - 1].subproblems[subLength-1]['explains'] = str
