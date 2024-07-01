@@ -1,4 +1,4 @@
-// 一些正则枚举
+// 正则枚举
 // const num = /^(\d+)[．.,、，:： )](.+)|^第(\d+)题(.+)/g
 const num1 = /^(\d+)\./g
 const num2 = /^第(\d+)题/g
@@ -30,11 +30,14 @@ const analyse2 = /^【分析】/g
 const explain1 = /^\[解析\]/g
 const explain2 = /^【解析】/g
 
-const subNum1 = /^（(\d+)）/g
-const subNum2 = /^\((\d+)\)/g
+const subNum1 = /^（(\d+)）/
+const subNum2 = /^\((\d+)\)/
 
-const subExplain1 = /^【小问(\d+)解析】/g
-const subExplain2 = /^【小问(\d+)详解】/g
+const subExplain1 = /^【小问(\d+)解析】/
+const subExplain2 = /^【小问(\d+)详解】/
+
+const detail1 = /^\[详解\]/g
+const detail2 = /^【详解】/g
 
 
 export const numType = {
@@ -77,6 +80,11 @@ export const subNumType = {
 export const subExplainType = {
     1:subExplain1,
     2:subExplain2,
+}
+
+export const detailType = {
+    1:detail1,
+    2:detail2,
 }
 
 

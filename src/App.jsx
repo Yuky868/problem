@@ -24,7 +24,7 @@ table {
 function App() {
   const [file, setFile] = useState(null); // 文件信息
   const [editorText, setEditorText] = useState('') // 编译器中的内容，拆分题目后和预览区内容不一致
-  const [content, setContent] = useState(''); // 预览区内容的html
+  const [content, setContent] = useState(''); // 预览区内容的html，只在第一次解析文档时用了一下
   const [problems, setProblems] = useState([]) // 拆分后的题，不含标签结构
   const [imgUrls, setImgUrls] = useState([]) // 上传图片存储的url
   const uploadRef = useRef(null);
@@ -62,8 +62,11 @@ function App() {
         }; // 自定义样式映射
         const result = await mammoth.convertToHtml({ arrayBuffer, options });
         setContent(result.value);
-        console.log(result.value);
-        await uploadImages(result.value)
+        console.log(1111,result.value);
+        // await uploadImages(result.value)
+        if(window.tinymce){
+          window.tinymce.get('myEditor').setContent(result.value)
+        }
       };
       fileReader.readAsArrayBuffer(file);
     } catch (error) {
@@ -171,12 +174,13 @@ function App() {
               {<p style={{fontWeight: 600,color:'red'}}>小问:</p>}
               {pro.subproblems && pro.subproblems?.map((el,i) => {
                 return <>
-                <p key={i} dangerouslySetInnerHTML={{ __html: el?.body}}></p>
-                <p dangerouslySetInnerHTML={{ __html: el?.explains }}></p>
+                <p style={{fontWeight: 600}} key={i} dangerouslySetInnerHTML={{ __html: el?.body}}></p>
+                <p style={{color: '#666'}} dangerouslySetInnerHTML={{ __html: el?.explains }}></p>
                 </>
               })}
               <p dangerouslySetInnerHTML={{ __html: pro.answer }}></p>
               <p dangerouslySetInnerHTML={{ __html: pro.analysis }}></p>
+              <p dangerouslySetInnerHTML={{ __html: pro.detail }}></p>
               <p dangerouslySetInnerHTML={{ __html: pro.explains}}></p>
             </Card>
             })}
@@ -185,7 +189,7 @@ function App() {
       </Row>
       <Uploader 
         ref={uploadRef} 
-        onSuccess={(file) => {;
+        onSuccess={(file) => {
           const imgUrls = file.map(el => el.url)
           setImgUrls(imgUrls)
         }}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Modal, Form, Radio } from "antd";
-import {numType, choiceType, answerType, analyseType, explainType, subNumType, subExplainType} from '../utils/enum'
+import {numType, choiceType, answerType, analyseType, explainType, subNumType, subExplainType, detailType} from '../utils/enum'
 const App = ({ onOk }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -14,10 +14,11 @@ const App = ({ onOk }) => {
       const problemAnswerType = answerType[values.answerType]
       const problemAnalyseType = analyseType[values.analyseType]
       const problemExplainType = explainType[values.explainType]
+      const problemDetailType = detailType[values.detailType]
       const problemSubNumType = subNumType[values.subNumType]
       const problemSubExplainType = subExplainType[values.subExplainType]
       console.log('Received values of form: ', {problemNumType, problemChoiceType, problemAnswerType, problemAnalyseType, problemExplainType, problemSubNumType, problemSubExplainType});
-      onOk({problemNumType, problemChoiceType, problemAnswerType, problemAnalyseType, problemExplainType, problemSubNumType, problemSubExplainType})
+      onOk({problemNumType, problemChoiceType, problemAnswerType, problemAnalyseType, problemExplainType, problemSubNumType, problemSubExplainType, problemDetailType})
     });
     setIsModalOpen(false);
   };
@@ -71,6 +72,12 @@ const App = ({ onOk }) => {
             <Radio.Group>
               <Radio value={1}>[解析]</Radio>
               <Radio value={2}>【解析】</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item label="详解" name='detailType'>
+            <Radio.Group>
+              <Radio value={1}>[详解]</Radio>
+              <Radio value={2}>【详解】</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="小问序号" name='subNumType'>
