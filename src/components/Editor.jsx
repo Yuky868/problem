@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-
-
+import './editor.css'
 
 // eslint-disable-next-line react/prop-types
 function MyEditor({ onChange , ...props}) {
@@ -12,11 +11,16 @@ function MyEditor({ onChange , ...props}) {
           selector: `#${editorRef.current.id}`,
           // language: "zh_CN",
           height: 800,
-          plugins: [
-            'link','image','charmap','preview','anchor','searchreplace','visualblocks',
-            'fullscreen','insertdatetime','media','table','wordcount'
-         ],
-         toolbar: 'undo redo | bold italic | bullist numlist | link image | code',
+        //   plugins: [
+        //     'link','image','charmap','preview','anchor','searchreplace','visualblocks',
+        //     'fullscreen','insertdatetime','media','table','wordcount'
+        //  ],
+        //  toolbar: 'undo redo | bold italic | bullist numlist | link image | code',
+         plugins: [
+              'link','image','charmap','anchor','searchreplace',
+              'fullscreen'
+           ],
+         toolbar: 'undo redo | bold italic | bullist numlist ',
          setup: function(editor) {
           editor.on('change', function() {
             console.log("内容发生了变化");
