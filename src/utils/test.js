@@ -156,7 +156,7 @@ export const splitproblem = (arr, problemSplitType) => {
         }
       })
 
-      console.log('newProblem', newProblem);
+    //   console.log('newProblem', newProblem);
     return newProblem
 }
 

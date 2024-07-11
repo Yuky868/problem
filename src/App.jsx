@@ -78,72 +78,96 @@ function App() {
   // 拆题，拆题的数据源必须是编辑器中的内容
   const formatWord = (problemSplitType) => {
     const initProblemArr = splitproblem(lineArr, problemSplitType)
-    // console.log('initProblemArr',initProblemArr);
+    console.log('initProblemArr',initProblemArr);
+    processObjects(initProblemArr).then((result) => {
+      console.log('result',result);
+    })
     setProblems(initProblemArr)
   }
 
-  const uploadImages = async (htmlContent) => {
-    // 正则表达式匹配data: URLs
-    const imgRegex = /src="data:image\/[a-zA-Z]*;base64,([^"]*)"/g;
-    let match;
-
-    console.log(imgRegex.exec(htmlContent));
-    if((match = imgRegex.exec(htmlContent)) === null){
-      setEditorText(htmlContent)
-      if(window.tinymce){
-       window.tinymce.get('myEditor').setContent(htmlContent)
-       } 
-       setContent(getLines(htmlContent)?.join(''))
-       setLineArr(getLines(htmlContent))
-      return;
-    }
-  
-    while ((match = imgRegex.exec(htmlContent)) !== null) {
-        const b64Data = match[1];
-        // 将图片上传到服务器，并返回图片的URL
-        await uploadRef?.current?.uploadGetAsFile([
-          dataURLtoFile(b64Data, `${getUuid()}.png`),
-        ]);
-    }
+  const uploadBase64Image = (base64Image) => {
+    console.log('base64Image',base64Image)
+    base64Image.forEach(async (item)=> {
+      await uploadRef?.current?.uploadGetAsFile([
+        dataURLtoFile(item, `${getUuid()}.png`),
+      ]);
+    });
   }
 
-  // 替换图片的url
-  const replaceImages = (htmlContent, imgUrls = []) => {
-    const imgRegex = /src="data:image\/[a-zA-Z]*;base64,([^"]*)"/g;
+  // 收集所有Base64图片数据
+  const collectBase64Images = (field, imagesArray) => {
+    const base64ImageRegex = /<img[^>]+src=["']data:image\/\w+;base64,(.*?)["'][^>]*>/gi;
     let match;
-    let replacedContent = htmlContent;
-    let imgCount = 0; // 计算匹配到的base64图片数量
+    while ((match = base64ImageRegex.exec(field)) !== null) {
+      imagesArray.push(match[1]);
+    }
+  }
+// 替换字段中的Base64图片为URL
+function replaceBase64ImagesInField(field, urlsMap) {
+  return field.replace(/<img[^>]+src=["']data:image\/\w+;base64,(.*?)["'][^>]*>/gi, (match, base64Image) => {
+    const url = urlsMap.get(base64Image);
+    return `<img src="${url}">`;
+  });
+}
 
-    // 重置正则表达式的lastIndex属性，确保每次执行exec时从头开始查找
-    imgRegex.lastIndex = 0;
+  const uploadSuccess = (file) => {
+    const imgUrls = file.map(el => el.url)
+    setImgUrls(imgUrls)
+  }
 
-    while ((match = imgRegex.exec(htmlContent)) !== null) {
-        imgCount++; // 每找到一个匹配就增加计数
-        // 确保imgUrls中有足够的元素进行替换，避免数组越界
-        if (imgCount <= imgUrls.length) {
-            // 从imgUrls中获取当前索引对应的URL进行替换
-            const imageUrl = imgUrls[imgCount - 1]; // 因为数组索引从0开始，所以减1
-            replacedContent = replacedContent.replace(match[0], `src="${imageUrl}"`);
-        } else {
-            console.warn(`Not enough URLs provided. Only replaced ${imgUrls.length} out of ${imgCount} images.`);
-            break; // 如果imgUrls不足，停止替换
+  const [imagesToUpload, setImagesToUpload] = useState([])
+  async function processObjects(arrayOfObjects) {
+    const imagesToUpload = [];
+    
+    // 首先收集所有需要上传的Base64图片数据
+    for (const object of arrayOfObjects) {
+      for (const key in object) {
+        if (object.hasOwnProperty(key)) {
+          const value = object[key];
+          if (typeof value === 'string') {
+            collectBase64Images(value, imagesToUpload);
+          } else if (key === 'choices' && Array.isArray(value)) {
+            for (const choice of value) {
+              if (typeof choice.body === 'string') {
+                collectBase64Images(choice.body, imagesToUpload);
+              }
+            }
+          }
         }
+      }
     }
-
-    return replacedContent;
+    setImagesToUpload(imagesToUpload)
+    // 上传所有收集到的图片
+    await uploadBase64Image(imagesToUpload);
   }
 
-  // 只有在上传完成后，才会触发
-  useEffect(() => {
-    if(imgUrls.length){
-     const result = replaceImages(content, imgUrls)
-     setEditorText(result)
-     if(window.tinymce){
-       window.tinymce.get('myEditor').setContent(result)
-     }
-     setContent(getLines(result)?.join(''))
-     setLineArr(getLines(result))
+  const replacebase64tourl = (urlsMap, problemArr) => {
+    console.log('kkk',problemArr);
+    const newproblems = problemArr.map(problem => ({ ...problem }));
+    for (const object of newproblems) {
+      for (const key in object) {
+        if (object.hasOwnProperty(key)) {
+          let value = object[key];
+          if (typeof value === 'string') {
+            object[key] = replaceBase64ImagesInField(value, urlsMap);
+          } else if (key === 'choices' && Array.isArray(value)) {
+            for (const choice of value) {
+              if (typeof choice.body === 'string') {
+                choice.body = replaceBase64ImagesInField(choice.body, urlsMap);
+              }
+            }
+          }
+        }
+      }
     }
+    return newproblems
+  }
+
+  useEffect(() => {
+    // 创建一个映射表，用于快速查找Base64图片对应的URL
+    const urlsMap = new Map(imagesToUpload.map((image, index) => [image, imgUrls[index]]));
+    const res = replacebase64tourl(urlsMap, problems);
+    setProblems(res)
   },[imgUrls])
 
   return (
@@ -189,10 +213,7 @@ function App() {
       </Row>
       <Uploader 
         ref={uploadRef} 
-        onSuccess={(file) => {
-          const imgUrls = file.map(el => el.url)
-          setImgUrls(imgUrls)
-        }}
+        onSuccess={uploadSuccess}
       />
     </div>
   );

@@ -39,3 +39,68 @@ for (let index = 0; index < arr.length; index++) {
     const replaced = arr[index].replace(regex, '\uFF08  \uFF09')
     console.log(replaced)
 }
+
+// const uploadImages = async (htmlContent) => {
+  //   // 正则表达式匹配data: URLs
+  //   const imgRegex = /src="data:image\/[a-zA-Z]*;base64,([^"]*)"/g;
+  //   let match;
+
+  //   console.log(imgRegex.exec(htmlContent));
+  //   if((match = imgRegex.exec(htmlContent)) === null){
+  //     setEditorText(htmlContent)
+  //     if(window.tinymce){
+  //      window.tinymce.get('myEditor').setContent(htmlContent)
+  //      } 
+  //      setContent(getLines(htmlContent)?.join(''))
+  //      setLineArr(getLines(htmlContent))
+  //     return;
+  //   }
+  
+  //   while ((match = imgRegex.exec(htmlContent)) !== null) {
+  //       const b64Data = match[1];
+  //       // 将图片上传到服务器，并返回图片的URL
+  //       await uploadRef?.current?.uploadGetAsFile([
+  //         dataURLtoFile(b64Data, `${getUuid()}.png`),
+  //       ]);
+  //   }
+  // }
+
+  // 替换图片的url
+  // const replaceImages = (htmlContent, imgUrls = []) => {
+  //   const imgRegex = /src="data:image\/[a-zA-Z]*;base64,([^"]*)"/g;
+  //   let match;
+  //   let replacedContent = htmlContent;
+  //   let imgCount = 0; // 计算匹配到的base64图片数量
+
+  //   // 重置正则表达式的lastIndex属性，确保每次执行exec时从头开始查找
+  //   imgRegex.lastIndex = 0;
+
+  //   while ((match = imgRegex.exec(htmlContent)) !== null) {
+  //       imgCount++; // 每找到一个匹配就增加计数
+  //       // 确保imgUrls中有足够的元素进行替换，避免数组越界
+  //       if (imgCount <= imgUrls.length) {
+  //           // 从imgUrls中获取当前索引对应的URL进行替换
+  //           const imageUrl = imgUrls[imgCount - 1]; // 因为数组索引从0开始，所以减1
+  //           replacedContent = replacedContent.replace(match[0], `src="${imageUrl}"`);
+  //       } else {
+  //           console.warn(`Not enough URLs provided. Only replaced ${imgUrls.length} out of ${imgCount} images.`);
+  //           break; // 如果imgUrls不足，停止替换
+  //       }
+  //   }
+
+  //   return replacedContent;
+  // }
+
+
+  // 只有在上传完成后，才会触发
+//   useEffect(() => {
+//     if(imgUrls.length){
+//      const result = replaceImages(content, imgUrls)
+//      setEditorText(result)
+//      if(window.tinymce){
+//        window.tinymce.get('myEditor').setContent(result)
+//      }
+//      setContent(getLines(result)?.join(''))
+//      setLineArr(getLines(result))
+//     }
+//   },[imgUrls])
