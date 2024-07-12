@@ -187,6 +187,7 @@ function replaceBase64ImagesInField(field, urlsMap) {
           <StyledDiv style={{height: '80vh', overflow:'scroll'}}>
             {problems.map((pro, index) => {
             return <Card key={index} style={{ width: 500 }} >
+              <p>题号：{index+1}</p>
               <p dangerouslySetInnerHTML={{ __html: pro.body }} style={{fontWeight: 600}}></p>
               {pro?.choices && pro.choices?.map((el,i) => {
                 return <p key={el.num} style={el.correct ? {color: 'red'} : {}}>
@@ -200,9 +201,13 @@ function replaceBase64ImagesInField(field, urlsMap) {
                 <p style={{color: '#666'}} dangerouslySetInnerHTML={{ __html: el?.explains }}></p>
                 </>
               })}
+              <p style={{fontWeight: 600}}>答案:</p>
               <p dangerouslySetInnerHTML={{ __html: pro.answer }}></p>
+              <p style={{fontWeight: 600}}>分析:</p>
               <p dangerouslySetInnerHTML={{ __html: pro.analysis }}></p>
+              <p style={{fontWeight: 600}}>详解:</p>
               <p dangerouslySetInnerHTML={{ __html: pro.detail }}></p>
+              <p style={{fontWeight: 600}}>解析:</p>
               <p dangerouslySetInnerHTML={{ __html: pro.explains}}></p>
             </Card>
             })}

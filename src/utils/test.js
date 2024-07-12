@@ -6,22 +6,6 @@ export const getLines = function (str) {
     return str.match(resolve_line_regexp)
 }
 
-// 区分题号
-// const num = /^(\d+)[．.,、，:： )](.+)|^第(\d+)题(.+)/g,
-//     e = /<p\b[^<>]*>|<\/p>/g,
-//     t = /^<br\/>/g,
-//     s = /<(\w)+(\d)?\b[^<>]*>|<\/(\w)+(\d)?>|<(\w)+(\d)?\b[^<>]*(\/)?>/g,
-//     a = /\s/g,
-//     tags =
-//         /<(p|table|tr|td|tbody)\b[^<>]*>.*?<\/(p|table|tr|td|tbody)?>|[^<>\/]*?<\/(p|table|tr|td|tbody)?>|<\/(p|table|tr|td|tbody)?>[^<>\/]*?<(p|table|tr|td|tbody)?>|<img\b[^<>]*>|[^<>\/]+(?=<(p|table|tr|td|tbody)?>)/g,
-
-//     ans = /^答案|^\[答案\]|^【答案】|^答案：|^答案:|【答案】/,
-//     exp = /^解析|^\[解析\]|【解析】|^解析：|^解析:/,
-//     ana = /^分析|^\[分析\]|【分析】|^分析：|^分析:/,
-//     choice = /^([A-Z]+)[．.,，:： )](.+)/g,
-//     bodyImg = /<img\b[^<>]*>/g;
-
-
 export const splitproblem = (arr, problemSplitType) => {
     const { problemNumType, 
         problemChoiceType, 
@@ -50,7 +34,7 @@ export const splitproblem = (arr, problemSplitType) => {
             problemNumber++
             problemInitArr.push({
                 startLine: index, // 上一个关键字出现的行数标识
-                body: str, // 题干
+                body: str.replace(numberReg, ''), // 题干
                 initChoices: '',
                 answer: '', //答案
                 explains: '', // 解析
@@ -62,19 +46,19 @@ export const splitproblem = (arr, problemSplitType) => {
             })
         } else if (problemAnswerType.test(str)) {
             // 答案
-            problemInitArr[problemNumber - 1].answer = str
+            problemInitArr[problemNumber - 1].answer = str.replace(problemAnswerType, '')
             problemInitArr[problemNumber - 1].lastType = 'answer'
         } else if (problemExplainType.test(str)) {
             // 解析
-            problemInitArr[problemNumber - 1].explains = str
+            problemInitArr[problemNumber - 1].explains = str.replace(problemExplainType, '')
             problemInitArr[problemNumber - 1].lastType = 'explains'
         } else if (problemAnalyseType.test(str)) {
             // 分析
-            problemInitArr[problemNumber - 1].analysis = str
+            problemInitArr[problemNumber - 1].analysis = str.replace(problemAnalyseType, '')
             problemInitArr[problemNumber - 1].lastType = 'analysis'
         } else if(problemDetailType.test(str)){
             // 详解
-            problemInitArr[problemNumber - 1].detail = str
+            problemInitArr[problemNumber - 1].detail = str.replace(problemDetailType, '')
             problemInitArr[problemNumber - 1].lastType = 'detail'
         }
         else if (problemChoiceType.exec(str) !== null) {

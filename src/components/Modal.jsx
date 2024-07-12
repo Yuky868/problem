@@ -32,7 +32,7 @@ const App = ({ onOk }) => {
       const problemDetailType = detailType[values.detailType] || new RegExp(values.detailType, 'g')
       const problemSubNumType = subNumType[values.subNumType]
       const problemSubExplainType = subExplainType[values.subExplainType]
-      console.log('Received values of form: ', {problemNumType, problemChoiceType, problemAnswerType, problemAnalyseType, problemExplainType, problemSubNumType, problemSubExplainType});
+      console.log('Received values of form: ', {problemNumType, problemChoiceType, problemAnswerType, problemAnalyseType, problemExplainType, problemSubNumType, problemSubExplainType, problemDetailType});
       onOk({problemNumType, problemChoiceType, problemAnswerType, problemAnalyseType, problemExplainType, problemSubNumType, problemSubExplainType, problemDetailType})
     });
     setIsModalOpen(false);

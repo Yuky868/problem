@@ -104,3 +104,18 @@ for (let index = 0; index < arr.length; index++) {
 //      setLineArr(getLines(result))
 //     }
 //   },[imgUrls])
+
+// 区分题号
+// const num = /^(\d+)[．.,、，:： )](.+)|^第(\d+)题(.+)/g,
+//     e = /<p\b[^<>]*>|<\/p>/g,
+//     t = /^<br\/>/g,
+//     s = /<(\w)+(\d)?\b[^<>]*>|<\/(\w)+(\d)?>|<(\w)+(\d)?\b[^<>]*(\/)?>/g,
+//     a = /\s/g,
+//     tags =
+//         /<(p|table|tr|td|tbody)\b[^<>]*>.*?<\/(p|table|tr|td|tbody)?>|[^<>\/]*?<\/(p|table|tr|td|tbody)?>|<\/(p|table|tr|td|tbody)?>[^<>\/]*?<(p|table|tr|td|tbody)?>|<img\b[^<>]*>|[^<>\/]+(?=<(p|table|tr|td|tbody)?>)/g,
+
+//     ans = /^答案|^\[答案\]|^【答案】|^答案：|^答案:|【答案】/,
+//     exp = /^解析|^\[解析\]|【解析】|^解析：|^解析:/,
+//     ana = /^分析|^\[分析\]|【分析】|^分析：|^分析:/,
+//     choice = /^([A-Z]+)[．.,，:： )](.+)/g,
+//     bodyImg = /<img\b[^<>]*>/g;
