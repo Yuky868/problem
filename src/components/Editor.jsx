@@ -16,16 +16,12 @@ function MyEditor({ onChange , ...props}) {
         //     'fullscreen','insertdatetime','media','table','wordcount'
         //  ],
         //  toolbar: 'undo redo | bold italic | bullist numlist | link image | code',
-         plugins: [
-              'link','image','charmap','anchor','searchreplace',
-              'fullscreen'
-           ],
+         plugins: ['link','charmap','fullscreen'],
          toolbar: 'undo redo | bold italic | bullist numlist ',
          setup: function(editor) {
           editor.on('change', function() {
             console.log("内容发生了变化");
             const changeValue =  editor.getContent()
-            console.log(changeValue);
             onChange(changeValue)
           });
         }

@@ -1,20 +1,35 @@
-import React, { useState } from "react";
-import { Button, Modal, Form, Radio } from "antd";
+import { useState } from "react";
+import { Button, Modal, Form, Radio, Input } from "antd";
 import {numType, choiceType, answerType, analyseType, explainType, subNumType, subExplainType, detailType} from '../utils/enum'
 const App = ({ onOk }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+
+  const [analyCustom, setAnalyCustom] = useState('')
+  const [explainCustom, setExplainCustom] = useState('')
+  const [detailCustom, setDetailCustom] = useState('')
   const showModal = () => {
     setIsModalOpen(true);
   };
+
+  const changInputAnaly = (e) => {
+    setAnalyCustom(e.target.value)
+  }
+
+  const changInputExplain = (e) => {
+    setExplainCustom(e.target.value)
+  }
+  const changInputAnaDetail = (e) => {
+    setDetailCustom(e.target.value)
+  }
   const handleOk = () => {
     form.validateFields().then((values) => {
       const problemNumType = numType[values.problemId]
       const problemChoiceType = choiceType[values.choiceType]
       const problemAnswerType = answerType[values.answerType]
-      const problemAnalyseType = analyseType[values.analyseType]
-      const problemExplainType = explainType[values.explainType]
-      const problemDetailType = detailType[values.detailType]
+      const problemAnalyseType = analyseType[values.analyseType] || new RegExp(values.analyseType, 'g')
+      const problemExplainType = explainType[values.explainType] || new RegExp(values.explainType, 'g')
+      const problemDetailType = detailType[values.detailType] || new RegExp(values.detailType, 'g')
       const problemSubNumType = subNumType[values.subNumType]
       const problemSubExplainType = subExplainType[values.subExplainType]
       console.log('Received values of form: ', {problemNumType, problemChoiceType, problemAnswerType, problemAnalyseType, problemExplainType, problemSubNumType, problemSubExplainType});
@@ -66,18 +81,21 @@ const App = ({ onOk }) => {
             <Radio.Group>
               <Radio value={1}>[分析]</Radio>
               <Radio value={2}>【分析】</Radio>
+              <Radio value={analyCustom}><Input value={analyCustom} onChange={changInputAnaly}/></Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="解析" name='explainType'>
             <Radio.Group>
               <Radio value={1}>[解析]</Radio>
               <Radio value={2}>【解析】</Radio>
+              <Radio value={explainCustom}><Input value={explainCustom} onChange={changInputExplain}/></Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="详解" name='detailType'>
             <Radio.Group>
               <Radio value={1}>[详解]</Radio>
               <Radio value={2}>【详解】</Radio>
+              <Radio value={detailCustom}><Input value={detailCustom} onChange={changInputAnaDetail}/></Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="小问序号" name='subNumType'>

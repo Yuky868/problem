@@ -62,8 +62,7 @@ function App() {
         }; // 自定义样式映射
         const result = await mammoth.convertToHtml({ arrayBuffer, options });
         setContent(result.value);
-        console.log(1111,result.value);
-        // await uploadImages(result.value)
+        setLineArr(getLines(result.value))
         if(window.tinymce){
           window.tinymce.get('myEditor').setContent(result.value)
         }
@@ -77,8 +76,9 @@ function App() {
 
   // 拆题，拆题的数据源必须是编辑器中的内容
   const formatWord = (problemSplitType) => {
+    // console.log('problemSplitType',problemSplitType);
+    // return
     const initProblemArr = splitproblem(lineArr, problemSplitType)
-    console.log('initProblemArr',initProblemArr);
     processObjects(initProblemArr).then((result) => {
       console.log('result',result);
     })
@@ -86,7 +86,6 @@ function App() {
   }
 
   const uploadBase64Image = (base64Image) => {
-    console.log('base64Image',base64Image)
     base64Image.forEach(async (item)=> {
       await uploadRef?.current?.uploadGetAsFile([
         dataURLtoFile(item, `${getUuid()}.png`),
@@ -142,7 +141,6 @@ function replaceBase64ImagesInField(field, urlsMap) {
   }
 
   const replacebase64tourl = (urlsMap, problemArr) => {
-    console.log('kkk',problemArr);
     const newproblems = problemArr.map(problem => ({ ...problem }));
     for (const object of newproblems) {
       for (const key in object) {

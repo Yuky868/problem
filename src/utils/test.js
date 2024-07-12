@@ -97,8 +97,7 @@ export const splitproblem = (arr, problemSplitType) => {
                 subProblemNumber = number
                 problemInitArr[problemNumber - 1].subproblems[number - 1].explains = str
                 problemInitArr[problemNumber - 1].lastType = 'subExplain'
-
-                console.log(2222, number, problemInitArr[problemNumber - 1].subproblems);
+                // console.log(2222, number, problemInitArr[problemNumber - 1].subproblems);
             }
         }
         else {
