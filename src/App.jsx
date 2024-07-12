@@ -166,6 +166,7 @@ function replaceBase64ImagesInField(field, urlsMap) {
     const urlsMap = new Map(imagesToUpload.map((image, index) => [image, imgUrls[index]]));
     const res = replacebase64tourl(urlsMap, problems);
     setProblems(res)
+    console.log('problem', res);
   },[imgUrls])
 
   return (
