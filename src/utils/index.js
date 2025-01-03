@@ -133,7 +133,14 @@ export const removeTagsButKeepImg = (str) => {
            result.push(node.outerHTML);
        } else if(node.tagName.toLowerCase() === 'table') {
             result.push(node.outerHTML);
-       } else if (node.childNodes && node.childNodes.length > 0) {
+       } else if(node.tagName.toLowerCase() === 'sub'){
+            result.push(node.outerHTML);    
+       } else if(node.tagName.toLowerCase() === 'sup'){
+            result.push(node.outerHTML);    
+       } else if(node.tagName.toLowerCase() === 'strong'){
+            result.push(node.outerHTML);  
+       }
+       else if (node.childNodes && node.childNodes.length > 0) {
            // 如果是其他元素且有子节点，递归遍历子节点
            for (let i = 0; i < node.childNodes.length; i++) {
                traverseAndCollect(node.childNodes[i], result);

@@ -9,6 +9,7 @@ export default defineConfig({
   // },
   plugins: [react(), nodePolyfills()],
   server: {
+    port: 3001,
     cors: true,
     open: true,
     proxy: {

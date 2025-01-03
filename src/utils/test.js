@@ -1,10 +1,22 @@
 import { removeTagsButKeepImg } from './index'
 
 const resolve_line_regexp = /<table>.*<\/table>|<(p|table|tr|td|tbody)\b[^<>]*>.*?<\/(p|table|tr|td|tbody)?>|[^<>\/]*?<\/(p|table|tr|td|tbody)?>|<\/(p|table|tr|td|tbody)?>[^<>\/]*?<(p|table|tr|td|tbody)?>|<img\b[^<>]*>|[^<>\/]+(?=<(p|table|tr|td|tbody)?>)/g
+const regex_sub_sup = /<sub>([\d\w-]+)<\/sub>|<sup>([\d\w]+)<\/sup>/g;
 // 拆分成行数组
 export const getLines = function (str) {
     return str.match(resolve_line_regexp)
 }
+
+function replaceSubSup(match, p1, p2) {
+    if (p1 !== undefined) {
+    // 如果是 <sub> 标签，替换为下划线
+    return '_' + p1;
+    } else if (p2 !== undefined) {
+    // 如果是 <sup> 标签，替换为上标符号
+    return '^' + p2;
+    }
+}
+
 
 export const splitproblem = (arr, problemSplitType) => {
     const { problemNumType, 
@@ -24,12 +36,14 @@ export const splitproblem = (arr, problemSplitType) => {
 
     // 去除多余标签，只保留img/table标签
     for (var i = 0; i < arr.length; i++) {
-        const removeTagString = removeTagsButKeepImg(arr[i])
+        const removeTagString =removeTagsButKeepImg(arr[i])
         stringArr.push(removeTagString)
     }
+    const newStringArr = stringArr.map(str => str.replace(regex_sub_sup, replaceSubSup))
+    console.log(222, newStringArr)
 
     // 需要再次细化一下，没有特殊表示的行，可以通过index的位置来处理
-    stringArr.forEach((str, index) => {
+    newStringArr.forEach((str, index) => {
         if (numberReg.test(str)) {
             problemNumber++
             problemInitArr.push({
