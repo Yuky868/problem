@@ -14,6 +14,9 @@ dependencies:
   axios:
     specifier: ^1.6.8
     version: 1.7.2
+  dom-to-image:
+    specifier: ^2.6.0
+    version: 2.6.0
   katex:
     specifier: ^0.16.0
     version: 0.16.10
@@ -1641,6 +1644,10 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /dom-to-image@2.6.0:
+    resolution: {integrity: sha512-Dt0QdaHmLpjURjU7Tnu3AgYSF2LuOmksSGsUcE6ItvJoCWTBEmiMXcqBdNSAm9+QbbwD7JMoVsuuKX6ZVQv1qA==}
+    dev: false
 
   /domain-browser@4.23.0:
     resolution: {integrity: sha512-ArzcM/II1wCCujdCNyQjXrAFwS4mrLh4C7DZWlaI8mdh7h3BfKdNd3bKXITfl2PT9FtfQqaGvhi1vPRQPimjGA==}

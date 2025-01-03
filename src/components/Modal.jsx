@@ -98,7 +98,7 @@ const App = ({ onOk }) => {
               <Radio value={detailCustom}><Input value={detailCustom} onChange={changInputAnaDetail}/></Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="小问序号" name='subNumType'>
+          {/* <Form.Item label="小问序号" name='subNumType'>
             <Radio.Group>
                 <Radio value={1}>（1）</Radio>
               <Radio value={2}>(1)</Radio>
@@ -109,7 +109,7 @@ const App = ({ onOk }) => {
                 <Radio value={1}>【小问1解析】</Radio>
                 <Radio value={2}>【小问1详解】</Radio>
             </Radio.Group>
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Modal>
     </>

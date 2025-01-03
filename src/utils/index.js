@@ -1,4 +1,5 @@
 // import axios from 'axios';
+import domtoimage from 'dom-to-image';
 export const formatContent = (content) => {
     // 正则表达式匹配题目前缀（数字或中文序号）、题干、答案、解析
  const regex = /([0-9]{1,2}[.])/g;
@@ -123,8 +124,7 @@ export const removeTagsButKeepImg = (str) => {
    const doc = parser.parseFromString(str, 'text/html');
    const body = doc.body;
 
-   function traverseAndCollect(node, result) {
-
+   async function traverseAndCollect(node, result) {
        if (node.nodeType === Node.TEXT_NODE) {
            // 如果是文本节点，直接添加文本内容
            result.push(node.textContent);
@@ -132,7 +132,12 @@ export const removeTagsButKeepImg = (str) => {
            // 如果是<img>标签，添加outerHTML
            result.push(node.outerHTML);
        } else if(node.tagName.toLowerCase() === 'table') {
-            result.push(node.outerHTML);
+            const domstring = '<table><tbody><tr><td><p>选项</p></td><td><p>生命现象</p></td><td><p>预测或分析</p></td></tr><tr><td><p>A</p></td><td><p>相比于野生型，酵母菌S基因突变体中，内质网形成的囊泡在细胞中大量积累</p></td><td><p>野生型的S基因编码的蛋白质具有参与囊泡与细胞膜融合的功能</p></td></tr><tr><td><p>B</p></td><td><p>在淡水中生活的草履虫能通过伸缩泡排出细胞内过多的水，防止细胞破裂</p></td><td><p>如果将草履虫放入海水中，其伸缩泡的伸缩频率会减慢</p></td></tr><tr><td><p>C</p></td><td><p>植物雌蕊的柱头上有多种不同植物的花粉，只有同种生物的花粉能萌发出花粉管</p></td><td><p>细胞膜具有进行细胞间的信息交流的功能</p></td></tr><tr><td><p>D</p></td><td><p>人体肠道内寄生的痢疾内变形虫能分泌蛋白酶，溶解人的肠壁组织并“吃掉”肠壁组织细胞，引发阿米巴痢疾</p></td><td><p>痢疾内变形虫分泌蛋白酶的过程需要能量，属于胞吐</p></td></tr></tbody></table>'
+            const dataUrl = await convertTableToImage(domstring);
+            // const imgTag = `<img src="${dataUrl}" alt="Converted Table" />`;
+            console.log('imgTag',dataUrl);
+            result.push(dataUrl);
+            // result.push(node.outerHTML);
        } else if(node.tagName.toLowerCase() === 'sub'){
             result.push(node.outerHTML);    
        } else if(node.tagName.toLowerCase() === 'sup'){
@@ -152,5 +157,69 @@ export const removeTagsButKeepImg = (str) => {
    traverseAndCollect(body, contentParts);
 
    return contentParts.join('');
+}
+
+async function convertTableToImage(tableHtml) {
+    // 创建一个临时的容器
+    const tempContainer = document.createElement('div');
+    // tempContainer.style.display = 'none'; // 隐藏容器以免影响页面显示
+    tempContainer.style.width = '500px';
+    tempContainer.style.height = '500px';
+    tempContainer.style.border = '1px solid black';
+    document.body.appendChild(tempContainer);
+
+    // 设置DOM字符串为容器的内容
+    const styleTag = document.createElement('style');
+    styleTag.type = 'text/css';
+    styleTag.innerHTML = `
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            height: 100%;
+        }
+        table td, table th {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    `;
+    tempContainer.appendChild(styleTag);
+    
+    // 使用DOMParser解析HTML字符串为DocumentFragment
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(tableHtml, 'text/html');
+
+    // 将解析后的表格内容插入到tempContainer中
+    const fragment = document.createDocumentFragment();
+    Array.from(doc.body.childNodes).forEach(child => fragment.appendChild(child.cloneNode(true)));
+    tempContainer.appendChild(fragment);
+
+    // 获取表格元素
+    // const tableNode = tempContainer.querySelector('table');
+    // if (!tableNode) {
+    //     console.error('未找到表格元素');
+    //     document.body.removeChild(tempContainer);
+    //     return;
+    // }
+
+    try {
+        // 等待下一个微任务，以确保DOM更新和样式已应用
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+         // 获取表格元素并进行转换
+         const tableNode = tempContainer.querySelector('table');
+         if (!tableNode) {
+             console.error('未找到表格元素');
+             return;
+         }
  
+         // 将表格转成PNG格式的Base64编码图片
+        const dataUrl = await domtoimage.toPng(tableNode);
+        const imgTag = `<img src="${dataUrl}" alt="Converted Table" />`;
+        console.log('成功生成图片:', imgTag);
+        return imgTag;
+    } catch (error) {
+        console.error('转换过程中出错:', error);
+    } finally {
+        // 清理 - 移除临时容器
+        document.body.removeChild(tempContainer);
+    }
 }

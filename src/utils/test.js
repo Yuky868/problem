@@ -25,8 +25,8 @@ export const splitproblem = (arr, problemSplitType) => {
         problemAnalyseType, 
         problemExplainType,
         problemDetailType,
-        problemSubNumType,
-        problemSubExplainType
+        // problemSubNumType,
+        // problemSubExplainType
     } = problemSplitType
     let numberReg = problemNumType
     let stringArr = []
@@ -81,23 +81,24 @@ export const splitproblem = (arr, problemSplitType) => {
                 problemInitArr[problemNumber - 1].initChoices += str
             }
         }
-        else if(problemSubNumType.test(str)){
-            if (problemInitArr[problemNumber - 1].lastType === 'body') {
-                problemInitArr[problemNumber - 1].subproblems.push({
-                    body: str,
-                    explains: ''
-                });
-            }
-        } else if(problemSubExplainType.test(str)){
-            const matchResult = str.match(problemSubExplainType);
-            if (matchResult) {
-                const number = parseInt(matchResult[1], 10);
-                subProblemNumber = number
-                problemInitArr[problemNumber - 1].subproblems[number - 1].explains = str
-                problemInitArr[problemNumber - 1].lastType = 'subExplain'
-                // console.log(2222, number, problemInitArr[problemNumber - 1].subproblems);
-            }
-        }
+        // else if(problemSubNumType.test(str)){
+        //     if (problemInitArr[problemNumber - 1].lastType === 'body') {
+        //         problemInitArr[problemNumber - 1].subproblems.push({
+        //             body: str,
+        //             explains: ''
+        //         });
+        //     }
+        // } 
+        // else if(problemSubExplainType.test(str)){
+        //     const matchResult = str.match(problemSubExplainType);
+        //     if (matchResult) {
+        //         const number = parseInt(matchResult[1], 10);
+        //         subProblemNumber = number
+        //         problemInitArr[problemNumber - 1].subproblems[number - 1].explains = str
+        //         problemInitArr[problemNumber - 1].lastType = 'subExplain'
+        //         // console.log(2222, number, problemInitArr[problemNumber - 1].subproblems);
+        //     }
+        // }
         else {
             if (problemNumber !== 0) {
                 let { lastType } = problemInitArr[problemNumber - 1]
