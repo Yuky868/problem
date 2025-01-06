@@ -62,7 +62,7 @@ function App() {
 
   const blurEdit = () => {
     const draftToHtmlValue =  draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    console.log(draftToHtmlValue);
+    // console.log(draftToHtmlValue);
     setContent(draftToHtmlValue);
   }
 

@@ -125,7 +125,8 @@ async function traverseAndCollect(node, result) {
         // 如果是<img>标签，添加outerHTML
         result.push(node.outerHTML);
     } else if(node.tagName.toLowerCase() === 'table') {
-         const domstring = '<table><tbody><tr><td><p>选项</p></td><td><p>生命现象</p></td><td><p>预测或分析</p></td></tr><tr><td><p>A</p></td><td><p>相比于野生型，酵母菌S基因突变体中，内质网形成的囊泡在细胞中大量积累</p></td><td><p>野生型的S基因编码的蛋白质具有参与囊泡与细胞膜融合的功能</p></td></tr><tr><td><p>B</p></td><td><p>在淡水中生活的草履虫能通过伸缩泡排出细胞内过多的水，防止细胞破裂</p></td><td><p>如果将草履虫放入海水中，其伸缩泡的伸缩频率会减慢</p></td></tr><tr><td><p>C</p></td><td><p>植物雌蕊的柱头上有多种不同植物的花粉，只有同种生物的花粉能萌发出花粉管</p></td><td><p>细胞膜具有进行细胞间的信息交流的功能</p></td></tr><tr><td><p>D</p></td><td><p>人体肠道内寄生的痢疾内变形虫能分泌蛋白酶，溶解人的肠壁组织并“吃掉”肠壁组织细胞，引发阿米巴痢疾</p></td><td><p>痢疾内变形虫分泌蛋白酶的过程需要能量，属于胞吐</p></td></tr></tbody></table>'
+        console.log('table',node);
+         const domstring = node.outerHTML
          const dataUrl = await convertTableToImage(domstring);
          // const imgTag = `<img src="${dataUrl}" alt="Converted Table" />`;
          console.log('imgTag',dataUrl);
