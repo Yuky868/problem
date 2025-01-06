@@ -117,41 +117,39 @@ export const dataURLtoFile = (base64, filename) => {
  }
  return new File([u8arr], filename, { type: mime });
 };
+async function traverseAndCollect(node, result) {
+    if (node.nodeType === Node.TEXT_NODE) {
+        // 如果是文本节点，直接添加文本内容
+        result.push(node.textContent);
+    } else if (node.tagName.toLowerCase() === 'img') {
+        // 如果是<img>标签，添加outerHTML
+        result.push(node.outerHTML);
+    } else if(node.tagName.toLowerCase() === 'table') {
+         const domstring = '<table><tbody><tr><td><p>选项</p></td><td><p>生命现象</p></td><td><p>预测或分析</p></td></tr><tr><td><p>A</p></td><td><p>相比于野生型，酵母菌S基因突变体中，内质网形成的囊泡在细胞中大量积累</p></td><td><p>野生型的S基因编码的蛋白质具有参与囊泡与细胞膜融合的功能</p></td></tr><tr><td><p>B</p></td><td><p>在淡水中生活的草履虫能通过伸缩泡排出细胞内过多的水，防止细胞破裂</p></td><td><p>如果将草履虫放入海水中，其伸缩泡的伸缩频率会减慢</p></td></tr><tr><td><p>C</p></td><td><p>植物雌蕊的柱头上有多种不同植物的花粉，只有同种生物的花粉能萌发出花粉管</p></td><td><p>细胞膜具有进行细胞间的信息交流的功能</p></td></tr><tr><td><p>D</p></td><td><p>人体肠道内寄生的痢疾内变形虫能分泌蛋白酶，溶解人的肠壁组织并“吃掉”肠壁组织细胞，引发阿米巴痢疾</p></td><td><p>痢疾内变形虫分泌蛋白酶的过程需要能量，属于胞吐</p></td></tr></tbody></table>'
+         const dataUrl = await convertTableToImage(domstring);
+         // const imgTag = `<img src="${dataUrl}" alt="Converted Table" />`;
+         console.log('imgTag',dataUrl);
+         result.push(dataUrl);
+         // result.push(node.outerHTML);
+    } else if(node.tagName.toLowerCase() === 'sub'){
+         result.push(node.outerHTML);    
+    } else if(node.tagName.toLowerCase() === 'sup'){
+         result.push(node.outerHTML);    
+    } else if(node.tagName.toLowerCase() === 'strong'){
+         result.push(node.outerHTML);  
+    }
+    else if (node.childNodes && node.childNodes.length > 0) {
+        // 如果是其他元素且有子节点，递归遍历子节点
+        for (let i = 0; i < node.childNodes.length; i++) {
+            traverseAndCollect(node.childNodes[i], result);
+        }
+    }
+}
 
 export const removeTagsButKeepImg = (str) => {
-
    const parser = new DOMParser();
    const doc = parser.parseFromString(str, 'text/html');
    const body = doc.body;
-
-   async function traverseAndCollect(node, result) {
-       if (node.nodeType === Node.TEXT_NODE) {
-           // 如果是文本节点，直接添加文本内容
-           result.push(node.textContent);
-       } else if (node.tagName.toLowerCase() === 'img') {
-           // 如果是<img>标签，添加outerHTML
-           result.push(node.outerHTML);
-       } else if(node.tagName.toLowerCase() === 'table') {
-            const domstring = '<table><tbody><tr><td><p>选项</p></td><td><p>生命现象</p></td><td><p>预测或分析</p></td></tr><tr><td><p>A</p></td><td><p>相比于野生型，酵母菌S基因突变体中，内质网形成的囊泡在细胞中大量积累</p></td><td><p>野生型的S基因编码的蛋白质具有参与囊泡与细胞膜融合的功能</p></td></tr><tr><td><p>B</p></td><td><p>在淡水中生活的草履虫能通过伸缩泡排出细胞内过多的水，防止细胞破裂</p></td><td><p>如果将草履虫放入海水中，其伸缩泡的伸缩频率会减慢</p></td></tr><tr><td><p>C</p></td><td><p>植物雌蕊的柱头上有多种不同植物的花粉，只有同种生物的花粉能萌发出花粉管</p></td><td><p>细胞膜具有进行细胞间的信息交流的功能</p></td></tr><tr><td><p>D</p></td><td><p>人体肠道内寄生的痢疾内变形虫能分泌蛋白酶，溶解人的肠壁组织并“吃掉”肠壁组织细胞，引发阿米巴痢疾</p></td><td><p>痢疾内变形虫分泌蛋白酶的过程需要能量，属于胞吐</p></td></tr></tbody></table>'
-            const dataUrl = await convertTableToImage(domstring);
-            // const imgTag = `<img src="${dataUrl}" alt="Converted Table" />`;
-            console.log('imgTag',dataUrl);
-            result.push(dataUrl);
-            // result.push(node.outerHTML);
-       } else if(node.tagName.toLowerCase() === 'sub'){
-            result.push(node.outerHTML);    
-       } else if(node.tagName.toLowerCase() === 'sup'){
-            result.push(node.outerHTML);    
-       } else if(node.tagName.toLowerCase() === 'strong'){
-            result.push(node.outerHTML);  
-       }
-       else if (node.childNodes && node.childNodes.length > 0) {
-           // 如果是其他元素且有子节点，递归遍历子节点
-           for (let i = 0; i < node.childNodes.length; i++) {
-               traverseAndCollect(node.childNodes[i], result);
-           }
-       }
-   }
 
    const contentParts = [];
    traverseAndCollect(body, contentParts);
