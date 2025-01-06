@@ -7,7 +7,7 @@ export const formatContent = (content) => {
  // 使用正则表达式替换匹配到的部分，为每个匹配项前后添加<div>标签
  const wrappedContent = content.replace(regex, (match, p1, p2) => {
    // 去掉开头可能的空白字符，并为每个部分添加<div>包装
-   console.log(match, p1, p2);
+//    console.log(match, p1, p2);
    return `<div class="${p1 === '一、' || p1 === '二、' || p1 === '三、' ? 'sectionTitle' : ''}">${p1.trim()}${p2.trim()}</div>`;
  });
 
@@ -125,11 +125,9 @@ async function traverseAndCollect(node, result) {
         // 如果是<img>标签，添加outerHTML
         result.push(node.outerHTML);
     } else if(node.tagName.toLowerCase() === 'table') {
-        console.log('table',node);
          const domstring = node.outerHTML
          const dataUrl = await convertTableToImage(domstring);
-         // const imgTag = `<img src="${dataUrl}" alt="Converted Table" />`;
-         console.log('imgTag',dataUrl);
+        //  console.log('imgTag',dataUrl);
          result.push(dataUrl);
          // result.push(node.outerHTML);
     } else if(node.tagName.toLowerCase() === 'sub'){
@@ -151,10 +149,8 @@ export const removeTagsButKeepImg =async (str) => {
    const parser = new DOMParser();
    const doc = parser.parseFromString(str, 'text/html');
    const body = doc.body;
-
    const contentParts = [];
    await traverseAndCollect(body, contentParts);
-
    return contentParts.join('');
 }
 

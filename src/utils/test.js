@@ -1,6 +1,8 @@
 import { removeTagsButKeepImg } from './index'
 
-const resolve_line_regexp = /<table>.*<\/table>|<(p|table|tr|td|tbody)\b[^<>]*>.*?<\/(p|table|tr|td|tbody)?>|[^<>\/]*?<\/(p|table|tr|td|tbody)?>|<\/(p|table|tr|td|tbody)?>[^<>\/]*?<(p|table|tr|td|tbody)?>|<img\b[^<>]*>|[^<>\/]+(?=<(p|table|tr|td|tbody)?>)/g
+// 1.6 取消table标签中的贪婪匹配，避免两个table被识别为一个table的问题
+const resolve_line_regexp = /<table\b[^<>]*>.*?<\/table>|<(p|tr|td|tbody)\b[^<>]*>.*?<\/(p|tr|td|tbody)>|<\/(p|tr|td|tbody)>[^<>\/]*?<(p|tr|td|tbody)\b[^<>]*>|<img\b[^<>]*>|[^<>\/]+(?=<(p|table|tr|td|tbody)\b)/g;
+// const resolve_line_regexp = /<table>.*<\/table>|<(p|table|tr|td|tbody)\b[^<>]*>.*?<\/(p|table|tr|td|tbody)?>|[^<>\/]*?<\/(p|table|tr|td|tbody)?>|<\/(p|table|tr|td|tbody)?>[^<>\/]*?<(p|table|tr|td|tbody)?>|<img\b[^<>]*>|[^<>\/]+(?=<(p|table|tr|td|tbody)?>)/g
 const regex_sub_sup = /<sub>([\d\w-]+)<\/sub>|<sup>([\d\w]+)<\/sup>/g;
 // 拆分成行数组
 export const getLines = function (str) {
@@ -19,6 +21,7 @@ function replaceSubSup(match, p1, p2) {
 
 
 export const splitproblem = async (arr, problemSplitType) => {
+    console.log('待拆分的数组：',arr)
     const { problemNumType, 
         problemChoiceType, 
         problemAnswerType, 
@@ -35,7 +38,7 @@ export const splitproblem = async (arr, problemSplitType) => {
     let subProblemNumber = 0
 
     // 去除多余标签，只保留img/table标签
-    for (var i = 0; i < arr.length; i++) {
+    for (var i = 0; i < arr.length; i++) {        
         const removeTagString = await removeTagsButKeepImg(arr[i])
         stringArr.push(removeTagString)
     }

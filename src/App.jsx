@@ -62,7 +62,8 @@ function App() {
         }; // 自定义样式映射
         const result = await mammoth.convertToHtml({ arrayBuffer, options });
         setContent(result.value);
-        // console.log(11,result.value,getLines(result.value));
+        console.log('00',result.value)
+        console.log(11,getLines(result.value));
         setLineArr(getLines(result.value))
         if(window.tinymce){
           window.tinymce.get('myEditor').setContent(result.value)
@@ -79,7 +80,7 @@ function App() {
   const formatWord =async (problemSplitType) => {
     const initProblemArr =await splitproblem(lineArr, problemSplitType)
     processObjects(initProblemArr).then((result) => {
-      console.log('result',result);
+      console.log('problem-result',result);
     })
     setProblems(initProblemArr)
   }
