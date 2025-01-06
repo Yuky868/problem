@@ -141,18 +141,18 @@ async function traverseAndCollect(node, result) {
     else if (node.childNodes && node.childNodes.length > 0) {
         // 如果是其他元素且有子节点，递归遍历子节点
         for (let i = 0; i < node.childNodes.length; i++) {
-            traverseAndCollect(node.childNodes[i], result);
+            await traverseAndCollect(node.childNodes[i], result);
         }
     }
 }
 
-export const removeTagsButKeepImg = (str) => {
+export const removeTagsButKeepImg =async (str) => {
    const parser = new DOMParser();
    const doc = parser.parseFromString(str, 'text/html');
    const body = doc.body;
 
    const contentParts = [];
-   traverseAndCollect(body, contentParts);
+   await traverseAndCollect(body, contentParts);
 
    return contentParts.join('');
 }

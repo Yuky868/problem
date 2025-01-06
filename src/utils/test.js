@@ -18,7 +18,7 @@ function replaceSubSup(match, p1, p2) {
 }
 
 
-export const splitproblem = (arr, problemSplitType) => {
+export const splitproblem = async (arr, problemSplitType) => {
     const { problemNumType, 
         problemChoiceType, 
         problemAnswerType, 
@@ -36,7 +36,7 @@ export const splitproblem = (arr, problemSplitType) => {
 
     // 去除多余标签，只保留img/table标签
     for (var i = 0; i < arr.length; i++) {
-        const removeTagString =removeTagsButKeepImg(arr[i])
+        const removeTagString = await removeTagsButKeepImg(arr[i])
         stringArr.push(removeTagString)
     }
     const newStringArr = stringArr.map(str => str.replace(regex_sub_sup, replaceSubSup))

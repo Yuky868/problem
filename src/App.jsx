@@ -76,10 +76,8 @@ function App() {
   };
 
   // 拆题，拆题的数据源必须是编辑器中的内容
-  const formatWord = (problemSplitType) => {
-    // console.log('problemSplitType',problemSplitType);
-    // return
-    const initProblemArr = splitproblem(lineArr, problemSplitType)
+  const formatWord =async (problemSplitType) => {
+    const initProblemArr =await splitproblem(lineArr, problemSplitType)
     processObjects(initProblemArr).then((result) => {
       console.log('result',result);
     })
@@ -187,7 +185,7 @@ function replaceBase64ImagesInField(field, urlsMap) {
         </Col>
         <Col span={14}>
           <StyledDiv style={{height: '80vh', overflow:'scroll'}}>
-            {problems.map((pro, index) => {
+            {problems?.map((pro, index) => {
             return <Card key={index} style={{ width: 500 }} >
               <p>题号：{index+1}</p>
               <p dangerouslySetInnerHTML={{ __html: pro.body }} style={{fontWeight: 600}}></p>
@@ -196,13 +194,13 @@ function replaceBase64ImagesInField(field, urlsMap) {
                   <span>{el.num}</span><span key={i} dangerouslySetInnerHTML={{ __html: el.body }}></span>
                 </p>
               })}          
-              {<p style={{fontWeight: 600,color:'red'}}>小问:</p>}
+              {/* {<p style={{fontWeight: 600,color:'red'}}>小问:</p>}
               {pro.subproblems && pro.subproblems?.map((el,i) => {
                 return <>
                 <p style={{fontWeight: 600}} key={i} dangerouslySetInnerHTML={{ __html: el?.body}}></p>
                 <p style={{color: '#666'}} dangerouslySetInnerHTML={{ __html: el?.explains }}></p>
                 </>
-              })}
+              })} */}
               <p style={{fontWeight: 600}}>答案:</p>
               <p dangerouslySetInnerHTML={{ __html: pro.answer }}></p>
               <p style={{fontWeight: 600}}>分析:</p>
